@@ -10,7 +10,7 @@ export function BottomNav({ activeTab, onTabChange }) {
     },
     {
       id: 'activity',
-      label: 'Активность',
+      label: 'Чеки',
       icon: FileText,
     },
     {

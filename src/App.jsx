@@ -41,6 +41,8 @@ export default function App() {
   const [pets, setPets] = useState([]);
   const [activePet, setActivePet] = useState(null);
   const [petsLoadError, setPetsLoadError] = useState('');
+  const [rides, setRides] = useState([]);
+  const [ridesLoadError, setRidesLoadError] = useState('');
 
   useEffect(() => {
     if (!user) {
@@ -74,6 +76,31 @@ export default function App() {
         if (!cancelled) setPetsLoadError(error.message);
       });
 
+    return () => { cancelled = true; };
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) {
+      setRides([]);
+      setRidesLoadError('');
+      return undefined;
+    }
+    let cancelled = false;
+    fetch('/api/orders', { credentials: 'same-origin' })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('Не удалось загрузить чеки поездок.');
+        return response.json();
+      })
+      .then((orders) => {
+        if (cancelled || !Array.isArray(orders)) return;
+        const normalized = orders.map((order) => {
+          let details = {};
+          try { details = JSON.parse(order.description); } catch { details = { note: order.description }; }
+          return { ...details, id: order.id, dbId: order.id, petName: details.petName || order.pet_name, status: order.status, createdAt: order.created_at };
+        });
+        setRides(normalized);
+      })
+      .catch((error) => { if (!cancelled) setRidesLoadError(error.message); });
     return () => { cancelled = true; };
   }, [user]);
 
@@ -125,6 +152,53 @@ export default function App() {
     } catch (error) {
       setPetsLoadError(error.message || 'Не удалось удалить питомца.');
     }
+  };
+
+  const handleCompleteRide = async (ride) => {
+    if (!activePet?.id) {
+      const localRide = { ...ride, id: `demo-${Date.now()}`, status: 'completed' };
+      setRides((current) => [localRide, ...current]);
+      return localRide;
+    }
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pet_id: Number(activePet.id), description: JSON.stringify(ride), status: 'completed' }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Не удалось сохранить чек.');
+      const savedRide = { ...ride, id: result.id, dbId: result.id, status: 'completed' };
+      setRides((current) => [savedRide, ...current]);
+      setRidesLoadError('');
+      return savedRide;
+    } catch (error) {
+      setRidesLoadError(`${error.message} Чек останется доступен до перезагрузки страницы.`);
+      const localRide = { ...ride, id: `demo-${Date.now()}`, status: 'completed' };
+      setRides((current) => [localRide, ...current]);
+      return localRide;
+    }
+  };
+
+  const handleRateRide = async (ride) => {
+    const savedRide = { ...ride, status: 'completed' };
+    if (ride.dbId) {
+      try {
+        const response = await fetch('/api/orders', {
+          method: 'PUT',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: ride.dbId, description: JSON.stringify(savedRide) }),
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Не удалось сохранить оценку.');
+      } catch (error) {
+        setRidesLoadError(error.message);
+      }
+    }
+    setRides((current) => current.map((item) => item.id === savedRide.id ? savedRide : item));
+    return savedRide;
   };
 
   const handleLogout = async () => {
@@ -347,7 +421,7 @@ export default function App() {
         {/* Tab 2: Activity */}
         {activeTab === 'activity' && (
           <main className="flex-1">
-            <ActivityTab />
+            <ActivityTab rides={rides} error={ridesLoadError} />
           </main>
         )}
 
@@ -457,11 +531,15 @@ export default function App() {
         <ActiveRideModal
           isOpen={isActiveRideOpen}
           onClose={() => setIsActiveRideOpen(false)}
+          onCompleteRide={handleCompleteRide}
+          onRateRide={handleRateRide}
+          onViewReceipt={() => setActiveTab('activity')}
           pickup={pickupAddress}
           destination={destinationAddress}
           pet={activePet}
           tariff={selectedTariff}
           price={Math.max(10, selectedTariff.priceByn - 5)}
+          paymentMethod={selectedPaymentMethod?.title}
         />
       </div>
     </div>

@@ -16,7 +16,7 @@ export const TARIFFS = [
     id: 'standard',
     title: 'Стандарт Зоо',
     sub: 'Питомцы до 35 кг',
-    features: 'Гамак + свежая вода',
+    features: 'Свежая вода',
     carType: 'Кроссовер / Универсал',
     etaMin: 3,
     priceByn: 26.0,
