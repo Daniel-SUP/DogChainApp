@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 export function AuthScreen({ onAuthenticated }) {
-  const [mode, setMode] = useState('register');
+  const [mode, setMode] = useState('login');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

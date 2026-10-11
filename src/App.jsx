@@ -163,22 +163,6 @@ export default function App() {
   // Payment methods state (Cards & Cash)
   const [paymentMethods, setPaymentMethods] = useState([
     {
-      id: 'belkart-9210',
-      type: 'card',
-      title: 'Белкарт •••• 9210',
-      subtitle: 'Действует до 08/28 (BYN)',
-      last4: '9210',
-      isDefault: true,
-    },
-    {
-      id: 'visa-4419',
-      type: 'card',
-      title: 'Visa •••• 4419',
-      subtitle: 'Действует до 11/27 (BYN)',
-      last4: '4419',
-      isDefault: false,
-    },
-    {
       id: 'cash-driver',
       type: 'cash',
       title: 'Наличные водителю',
@@ -186,7 +170,7 @@ export default function App() {
       isDefault: false,
     },
   ]);
-  const [selectedPaymentId, setSelectedPaymentId] = useState('belkart-9210');
+  const [selectedPaymentId, setSelectedPaymentId] = useState('cash-driver');
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   // Modals state
@@ -304,19 +288,6 @@ export default function App() {
     setIsActiveRideOpen(true);
   };
 
-  // Reorder past ride
-  const handleReorderPastRide = async (pastRide) => {
-    setPickupAddress(pastRide.pickup);
-    setDestinationAddress(pastRide.destination);
-
-    const pCoords = await forwardGeocode(pastRide.pickup);
-    const dCoords = await forwardGeocode(pastRide.destination);
-    if (pCoords) setPickupCoords(pCoords);
-    if (dCoords) setDestinationCoords(dCoords);
-
-    setActiveTab('rides');
-  };
-
   if (authLoading) {
     return <main className="min-h-screen bg-[#f4ede3] flex items-center justify-center text-[#7d6e61]">Загрузка…</main>;
   }
@@ -376,7 +347,7 @@ export default function App() {
         {/* Tab 2: Activity */}
         {activeTab === 'activity' && (
           <main className="flex-1">
-            <ActivityTab onReorderRide={handleReorderPastRide} />
+            <ActivityTab />
           </main>
         )}
 

@@ -138,6 +138,12 @@ export function PaymentModal({
                   );
                 })}
 
+              {paymentMethods.filter((method) => method.type === 'card').length === 0 && (
+                <p className="rounded-xl border border-dashed border-[#d8c8b5] p-3 text-xs text-[#7d6e61]">
+                  Карты не добавлены.
+                </p>
+              )}
+
               <button
                 type="button"
                 onClick={() => setIsAddingNew(true)}

@@ -96,36 +96,3 @@ export const MOCK_DRIVER = {
   phone: '+375 (29) 723-44-12',
   cprCertified: true,
 };
-
-export const PAST_RIDES = [
-  {
-    id: 'ride-brest-109',
-    pickup: 'ул. Советская, 42',
-    destination: 'Ветклиника «Айболит», ул. Московская, 326',
-    petName: 'Расти',
-    petBreed: 'Золотистый ретривер',
-    tariffTitle: 'Стандарт Зоо',
-    priceByn: 26.0,
-    paymentMethod: 'Белкарт •••• 9210',
-    status: 'completed',
-    driverName: 'Александр Ковальчук',
-    carModel: 'Škoda Kodiaq',
-    cabinTemp: 19.5,
-    date: 'Вчера, 14:30',
-  },
-  {
-    id: 'ride-brest-104',
-    pickup: 'пр-т Машерова, 28',
-    destination: 'Брестский Парк культуры (Зона выгула)',
-    petName: 'Бублик',
-    petBreed: 'Французский бульдог',
-    tariffTitle: 'Маленький пес',
-    priceByn: 18.5,
-    paymentMethod: 'Apple Pay',
-    status: 'completed',
-    driverName: 'Максим Дубровский',
-    carModel: 'VW Touran',
-    cabinTemp: 20.0,
-    date: '2 октября, 11:15',
-  },
-];
