@@ -94,7 +94,7 @@ export function BookingSheet({
               ТОЧКА ПОДАЧИ
             </span>
             <div className="text-sm font-semibold text-[#2a221c] group-hover:text-[#c2652a] transition-colors line-clamp-1">
-              {pickupAddress}
+              {pickupAddress || 'Укажите адрес подачи'}
             </div>
           </div>
           <button
@@ -155,7 +155,7 @@ export function BookingSheet({
               МЕСТО НАЗНАЧЕНИЯ
             </span>
             <div className="text-sm font-semibold text-[#2a221c] group-hover:text-[#c2652a] transition-colors line-clamp-1">
-              {destinationAddress}
+              {destinationAddress || 'Укажите место назначения'}
             </div>
           </div>
           <button
@@ -457,9 +457,16 @@ export function BookingSheet({
       </div>
 
       {/* Main Order CTA Button */}
+      {(!pickupAddress || !destinationAddress || !activePet) && (
+        <p className="mb-2 text-center text-[11px] text-[#9c8d7f]">
+          {!activePet ? 'Сначала выберите питомца' : 'Укажите адрес подачи и место назначения'}
+        </p>
+      )}
       <button
+        type="button"
+        disabled={!pickupAddress || !destinationAddress || !activePet}
         onClick={onOrderRide}
-        className="w-full bg-[#c2652a] hover:bg-[#b05820] text-white py-4 px-6 rounded-2xl font-bold flex items-center justify-between shadow-lg shadow-[#c2652a]/25 transition-all active:scale-[0.99] cursor-pointer"
+        className="w-full bg-[#c2652a] hover:bg-[#b05820] text-white py-4 px-6 rounded-2xl font-bold flex items-center justify-between shadow-lg shadow-[#c2652a]/25 transition-all active:scale-[0.99] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <div className="flex items-center gap-2">
           <span className="text-xl">🐾</span>

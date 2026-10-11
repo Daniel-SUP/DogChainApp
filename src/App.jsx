@@ -215,16 +215,11 @@ export default function App() {
   const [tariffs] = useState(TARIFFS);
   const [selectedTariff, setSelectedTariff] = useState(TARIFFS[1]);
 
-  // Dynamic Route Coordinates & Addresses in Brest
-  // Point A: ул. Советская, 42, Брест [52.0975, 23.6877]
-  const [pickupAddress, setPickupAddress] = useState('ул. Советская, 42');
-  const [pickupCoords, setPickupCoords] = useState([52.0975, 23.6877]);
-
-  // Point B: Ветклиника «Айболит», ул. Московская, 326 [52.1009, 23.7431]
-  const [destinationAddress, setDestinationAddress] = useState(
-    'Ветклиника «Айболит», ул. Московская, 326'
-  );
-  const [destinationCoords, setDestinationCoords] = useState([52.1009, 23.7431]);
+  // Addresses are selected by the user for each ride.
+  const [pickupAddress, setPickupAddress] = useState('');
+  const [pickupCoords, setPickupCoords] = useState(null);
+  const [destinationAddress, setDestinationAddress] = useState('');
+  const [destinationCoords, setDestinationCoords] = useState(null);
 
   // Режим выбора точки кликом по карте (активен только когда пользователь нажал "Указать на карте")
   // null | 'pickup' | 'destination'

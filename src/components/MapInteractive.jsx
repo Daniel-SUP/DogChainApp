@@ -252,8 +252,8 @@ function MapControls({ pickupCoords, destinationCoords }) {
 export function MapInteractive({
   pickupLocation,
   destinationLocation,
-  pickupCoords = [52.0975, 23.6877],
-  destinationCoords = [52.1009, 23.7431],
+  pickupCoords = null,
+  destinationCoords = null,
   mapPickingTarget = null, // null | 'pickup' | 'destination'
   onCancelMapPicking,
   onPointSelectedOnMap,
@@ -261,12 +261,17 @@ export function MapInteractive({
   onRouteCalculated,
 }) {
   const [routeInfo, setRouteInfo] = useState({
-    durationMin: 3,
-    distanceKm: '3.8',
+    durationMin: null,
+    distanceKm: null,
   });
 
   const [carCoordinates, setCarCoordinates] = useState([52.0988, 23.705]);
   const [isGeocoding, setIsGeocoding] = useState(false);
+  const hasRoute = Boolean(pickupCoords && destinationCoords);
+
+  useEffect(() => {
+    if (!hasRoute) setRouteInfo({ durationMin: null, distanceKm: null });
+  }, [hasRoute, pickupCoords, destinationCoords]);
 
   const handleRouteSummaryUpdate = (summary) => {
     setRouteInfo(summary);
@@ -307,10 +312,9 @@ export function MapInteractive({
     >
       {/* Карта Leaflet */}
       <MapContainer
-        center={[
-          (pickupCoords[0] + destinationCoords[0]) / 2,
-          (pickupCoords[1] + destinationCoords[1]) / 2,
-        ]}
+        center={hasRoute
+          ? [(pickupCoords[0] + destinationCoords[0]) / 2, (pickupCoords[1] + destinationCoords[1]) / 2]
+          : pickupCoords || destinationCoords || [52.0975, 23.6877]}
         zoom={13}
         zoomControl={false}
         scrollWheelZoom={true}
@@ -336,7 +340,7 @@ export function MapInteractive({
           setCarCoordinates={setCarCoordinates}
         />
 
-        <CarMarker position={carCoordinates} />
+        {hasRoute && <CarMarker position={carCoordinates} />}
 
         <MapControls
           pickupCoords={pickupCoords}
@@ -348,8 +352,9 @@ export function MapInteractive({
       <div className="absolute left-4 top-4 z-20 pointer-events-none">
         <div className="flex items-center gap-1.5 bg-[#c2652a] text-white px-3.5 py-1.5 rounded-xl shadow-lg text-xs font-semibold whitespace-nowrap">
           <span className="text-sm">🐾</span>
-          <span>Подача через {routeInfo.durationMin} мин</span>
-          <span className="opacity-80 text-[10px] ml-0.5">({routeInfo.distanceKm} км)</span>
+          {routeInfo.durationMin && routeInfo.distanceKm
+            ? <><span>Подача через {routeInfo.durationMin} мин</span><span className="opacity-80 text-[10px] ml-0.5">({routeInfo.distanceKm} км)</span></>
+            : <span>Укажите адреса поездки</span>}
         </div>
       </div>
 
