@@ -1,59 +1,5 @@
 // Generated visual assets
-import goldenRetrieverImg from '../assets/images/pet_golden_retriever_1791222709461.jpg';
-import frenchBulldogImg from '../assets/images/pet_french_bulldog_1791222724920.jpg';
-import siberianCatImg from '../assets/images/pet_siberian_cat_1791222734127.jpg';
 import driverSpecialistImg from '../assets/images/driver_pet_specialist_1791222745212.jpg';
-
-export const INITIAL_PETS = [
-  {
-    id: 'pet-rusty',
-    name: 'Расти',
-    category: 'Крупная собака',
-    breed: 'Золотистый ретривер',
-    notes: 'Двойной подшерсток, спокойный',
-    weightKg: 28,
-    heightCm: 58,
-    tempMin: 18,
-    tempMax: 21,
-    photoUrl: goldenRetrieverImg,
-    coatType: 'Двойной густой подшерсток',
-    temperament: 'Спокойный, дружелюбный',
-    requiresHammock: true,
-    requiresCrate: false,
-  },
-  {
-    id: 'pet-bublik',
-    name: 'Бублик',
-    category: 'Маленькая собака',
-    breed: 'Французский бульдог',
-    notes: 'Чувствителен к перегреву, мягкая шлейка',
-    weightKg: 12,
-    heightCm: 32,
-    tempMin: 19,
-    tempMax: 22,
-    photoUrl: frenchBulldogImg,
-    coatType: 'Короткошерстный',
-    temperament: 'Любопытный, контактный',
-    requiresHammock: false,
-    requiresCrate: false,
-  },
-  {
-    id: 'pet-barsik',
-    name: 'Барсик',
-    category: 'Кошка',
-    breed: 'Сибирский кот',
-    notes: 'Поездка в закрытом вентилируемом боксе',
-    weightKg: 5.5,
-    heightCm: 25,
-    tempMin: 20,
-    tempMax: 23,
-    photoUrl: siberianCatImg,
-    coatType: 'Длинношерстный',
-    temperament: 'Осторожный, тихий',
-    requiresHammock: false,
-    requiresCrate: true,
-  },
-];
 
 export const TARIFFS = [
   {

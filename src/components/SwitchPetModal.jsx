@@ -90,12 +90,16 @@ export function SwitchPetModal({
                         : 'bg-white/70 hover:bg-white border border-[#e8ded2]'
                     }`}
                   >
-                    <img
-                      src={pet.photoUrl}
-                      alt={pet.name}
-                      className="w-14 h-14 rounded-xl object-cover ring-2 ring-[#c2652a]/20"
-                      referrerPolicy="no-referrer"
-                    />
+                    {pet.photoUrl ? (
+                      <img
+                        src={pet.photoUrl}
+                        alt={pet.name}
+                        className="w-14 h-14 rounded-xl object-cover ring-2 ring-[#c2652a]/20"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <div className="w-14 h-14 rounded-xl bg-[#efe6d8] flex items-center justify-center text-xl" aria-hidden="true">🐾</div>
+                    )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
                         <span className="font-bold text-base text-[#2a221c]">{pet.name}</span>

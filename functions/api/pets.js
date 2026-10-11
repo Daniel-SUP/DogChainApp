@@ -1,15 +1,17 @@
-function jsonError(message, status = 400) {
-  return Response.json({ error: message }, { status });
-}
+import { getSession, hasSameOrigin, jsonError } from "../_lib/auth.js";
 
-export async function onRequestGet({ env }) {
+export async function onRequestGet(context) {
+  const { env } = context;
+  const user = await getSession(context);
+  if (!user) return jsonError("Сначала войдите в аккаунт.", 401);
   const { results } = await env.DB
     .prepare(`
       SELECT id, name, species, category, breed, notes, weight_kg, height_cm,
              temp_min, temp_max, photo_url, coat_type, temperament,
              requires_hammock, requires_crate, created_at
-      FROM pets ORDER BY id DESC
+      FROM pets WHERE user_id = ? ORDER BY id DESC
     `)
+    .bind(user.id)
     .all();
 
   return Response.json(results.map((pet) => ({
@@ -22,10 +24,14 @@ export async function onRequestGet({ env }) {
     coatType: pet.coat_type,
     requiresHammock: Boolean(pet.requires_hammock),
     requiresCrate: Boolean(pet.requires_crate),
-  })));
+  })), { headers: { "Cache-Control": "private, no-store" } });
 }
 
-export async function onRequestPost({ request, env }) {
+export async function onRequestPost(context) {
+  const { request, env } = context;
+  if (!hasSameOrigin(context)) return jsonError("Недопустимый источник запроса.", 403);
+  const user = await getSession(context);
+  if (!user) return jsonError("Сначала войдите в аккаунт.", 401);
   let body;
   try {
     body = await request.json();
@@ -33,7 +39,7 @@ export async function onRequestPost({ request, env }) {
     return jsonError("Тело запроса должно быть JSON.");
   }
 
-  if (typeof body.name !== "string" || !body.name.trim()) {
+  if (!body || typeof body !== "object" || typeof body.name !== "string" || !body.name.trim()) {
     return jsonError("Укажите имя питомца.");
   }
 
@@ -42,8 +48,8 @@ export async function onRequestPost({ request, env }) {
       INSERT INTO pets (
         name, species, category, breed, notes, weight_kg, height_cm,
         temp_min, temp_max, photo_url, coat_type, temperament,
-        requires_hammock, requires_crate
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        requires_hammock, requires_crate, user_id
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `)
     .bind(
       body.name.trim(),
@@ -60,8 +66,9 @@ export async function onRequestPost({ request, env }) {
       typeof body.temperament === "string" ? body.temperament : null,
       body.requiresHammock ? 1 : 0,
       body.requiresCrate ? 1 : 0,
+      user.id,
     )
     .run();
 
-  return Response.json({ id: result.meta.last_row_id }, { status: 201 });
+  return Response.json({ id: result.meta.last_row_id }, { status: 201, headers: { "Cache-Control": "no-store" } });
 }

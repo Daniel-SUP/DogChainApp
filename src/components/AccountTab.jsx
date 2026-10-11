@@ -8,6 +8,8 @@ import {
 } from 'lucide-react';
 
 export function AccountTab({
+  user,
+  onLogout,
   paymentMethods = [],
   selectedPaymentId,
   onOpenPaymentModal,
@@ -27,21 +29,16 @@ export function AccountTab({
   ];
 
   return (
-    <div className="px-4 py-4 max-w-md mx-auto pb-24">
-      {/* Profile Header */}
-      <div className="bg-white rounded-3xl p-4 border border-[#e5d9c9] shadow-sm mb-4 flex items-center gap-3.5">
+    <div className="px-4 py-4 max-w-md mx-auto pb-24">      <div className="bg-white rounded-3xl p-4 border border-[#e5d9c9] shadow-sm mb-4 flex items-center gap-3.5">
         <div className="w-14 h-14 rounded-2xl bg-[#efe6d8] text-[#c2652a] font-serif text-2xl font-bold flex items-center justify-center">
-          Д
+          {user?.name?.slice(0, 1)?.toUpperCase() || 'U'}
         </div>
         <div className="flex-1 min-w-0">
-          <h2 className="font-bold text-base text-[#2a221c]">Дмитрий Иванов</h2>
-          <p className="text-xs text-[#7d6e61] truncate">jhganstroi29@gmail.com</p>
-          <div className="flex items-center gap-1.5 text-[11px] text-[#c2652a] font-semibold mt-1">
-            <span>🇧🇾 {selectedRegion}</span>
-            <span>·</span>
-            <span>Премиум Зоо-клиент</span>
-          </div>
+          <h2 className="font-bold text-base text-[#2a221c]">{user?.name}</h2>
+          <p className="text-xs text-[#7d6e61] truncate">{user?.email}</p>
+          <div className="text-[11px] text-[#c2652a] font-semibold mt-1">{selectedRegion}</div>
         </div>
+        <button onClick={onLogout} className="text-xs font-semibold text-[#c2652a]">Выйти</button>
       </div>
 
       {/* Payment methods section with working modal open */}

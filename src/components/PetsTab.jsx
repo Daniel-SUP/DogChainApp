@@ -21,6 +21,11 @@ export function PetsTab({ pets, activePet, onSelectPet, onOpenAddNew }) {
       </div>
 
       <div className="space-y-4">
+        {pets.length === 0 && (
+          <div className="rounded-2xl border border-dashed border-[#d8c8b5] bg-white/60 p-5 text-center text-sm text-[#7d6e61]">
+            Питомцев пока нет. Добавьте первого питомца, чтобы сохранить его профиль.
+          </div>
+        )}
         {pets.map((pet) => {
           const isActive = activePet?.id === pet.id;
           return (
@@ -34,12 +39,16 @@ export function PetsTab({ pets, activePet, onSelectPet, onOpenAddNew }) {
             >
               {/* Pet Card Header */}
               <div className="flex items-start gap-3.5 mb-3">
-                <img
-                  src={pet.photoUrl}
-                  alt={pet.name}
-                  className="w-16 h-16 rounded-2xl object-cover ring-2 ring-[#c2652a]/20 shrink-0"
-                  referrerPolicy="no-referrer"
-                />
+                {pet.photoUrl ? (
+                  <img
+                    src={pet.photoUrl}
+                    alt={pet.name}
+                    className="w-16 h-16 rounded-2xl object-cover ring-2 ring-[#c2652a]/20 shrink-0"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <div className="w-16 h-16 rounded-2xl bg-[#efe6d8] flex items-center justify-center text-2xl shrink-0" aria-hidden="true">🐾</div>
+                )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
                     <h3 className="font-bold text-base text-[#2a221c] truncate">{pet.name}</h3>

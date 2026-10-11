@@ -14,38 +14,51 @@ import { BottomNav } from './components/BottomNav.jsx';
 import { ActivityTab } from './components/ActivityTab.jsx';
 import { PetsTab } from './components/PetsTab.jsx';
 import { AccountTab } from './components/AccountTab.jsx';
+import { AuthScreen } from './components/AuthScreen.jsx';
 
-import { INITIAL_PETS, TARIFFS } from './data/mockData.js';
+import { TARIFFS } from './data/mockData.js';
 import { forwardGeocode } from './utils/geocoding.js';
 
 export default function App() {
   // Navigation & Screen tab
   const [activeTab, setActiveTab] = useState('rides');
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/auth/me', { credentials: 'same-origin' })
+      .then((response) => response.json())
+      .then(({ user: currentUser }) => setUser(currentUser))
+      .catch(() => setUser(null))
+      .finally(() => setAuthLoading(false));
+  }, []);
 
   // Region state (Only Brest available)
   const [selectedRegion, setSelectedRegion] = useState('г. Брест');
   const [isRegionModalOpen, setIsRegionModalOpen] = useState(false);
 
   // Pet state
-  const [pets, setPets] = useState(INITIAL_PETS);
-  const [activePet, setActivePet] = useState(INITIAL_PETS[0]);
+  const [pets, setPets] = useState([]);
+  const [activePet, setActivePet] = useState(null);
   const [petsLoadError, setPetsLoadError] = useState('');
 
   useEffect(() => {
+    if (!user) {
+      setPets([]);
+      setActivePet(null);
+      return undefined;
+    }
+
+    setPetsLoadError('');
     let cancelled = false;
 
-    fetch('/api/pets')
+    fetch('/api/pets', { credentials: 'same-origin' })
       .then(async (response) => {
         if (!response.ok) throw new Error('Не удалось загрузить питомцев из базы.');
         return response.json();
       })
       .then((savedPets) => {
         if (cancelled || !Array.isArray(savedPets)) return;
-        if (savedPets.length === 0) {
-          setPets(INITIAL_PETS);
-          return;
-        }
-
         const normalizedPets = savedPets.map((pet) => ({
           ...pet,
           category: pet.category || pet.species || 'Питомец',
@@ -53,21 +66,21 @@ export default function App() {
           heightCm: pet.heightCm ?? 0,
           tempMin: pet.tempMin ?? 18,
           tempMax: pet.tempMax ?? 22,
-          photoUrl: pet.photoUrl || INITIAL_PETS[0].photoUrl,
         }));
         setPets(normalizedPets);
-        setActivePet((current) => normalizedPets.find((pet) => pet.id === current?.id) || normalizedPets[0]);
+        setActivePet((current) => normalizedPets.find((pet) => pet.id === current?.id) || normalizedPets[0] || null);
       })
       .catch((error) => {
         if (!cancelled) setPetsLoadError(error.message);
       });
 
     return () => { cancelled = true; };
-  }, []);
+  }, [user]);
 
   const handleAddNewPet = async (newPet) => {
     const response = await fetch('/api/pets', {
       method: 'POST',
+      credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newPet),
     });
@@ -77,10 +90,19 @@ export default function App() {
     const savedPet = {
       ...newPet,
       id: result.id,
-      photoUrl: newPet.photoUrl || INITIAL_PETS[0].photoUrl,
     };
-    setPets((current) => [...current.filter((pet) => !String(pet.id).startsWith('pet-')), savedPet]);
+    setPets((current) => [...current, savedPet]);
     return savedPet;
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });
+    } finally {
+      setUser(null);
+      setPets([]);
+      setActivePet(null);
+    }
   };
 
   // Tariffs & selection
@@ -262,6 +284,11 @@ export default function App() {
     setActiveTab('rides');
   };
 
+  if (authLoading) {
+    return <main className="min-h-screen bg-[#f4ede3] flex items-center justify-center text-[#7d6e61]">Загрузка…</main>;
+  }
+  if (!user) return <AuthScreen onAuthenticated={setUser} />;
+
   return (
     <div className="min-h-screen bg-[#f4ede3] flex justify-center">
       <div className="w-full max-w-md min-h-screen bg-[#faf5ee] shadow-2xl relative flex flex-col justify-between">
@@ -337,6 +364,8 @@ export default function App() {
         {activeTab === 'account' && (
           <main className="flex-1">
             <AccountTab
+              user={user}
+              onLogout={handleLogout}
               paymentMethods={paymentMethods}
               selectedPaymentId={selectedPaymentId}
               onOpenPaymentModal={() => setIsPaymentModalOpen(true)}
