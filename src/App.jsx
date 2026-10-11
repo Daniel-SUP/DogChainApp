@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Header } from './components/Header.jsx';
 import { MapInteractive } from './components/MapInteractive.jsx';
 import { BookingSheet } from './components/BookingSheet.jsx';
@@ -29,6 +29,59 @@ export default function App() {
   // Pet state
   const [pets, setPets] = useState(INITIAL_PETS);
   const [activePet, setActivePet] = useState(INITIAL_PETS[0]);
+  const [petsLoadError, setPetsLoadError] = useState('');
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch('/api/pets')
+      .then(async (response) => {
+        if (!response.ok) throw new Error('Не удалось загрузить питомцев из базы.');
+        return response.json();
+      })
+      .then((savedPets) => {
+        if (cancelled || !Array.isArray(savedPets)) return;
+        if (savedPets.length === 0) {
+          setPets(INITIAL_PETS);
+          return;
+        }
+
+        const normalizedPets = savedPets.map((pet) => ({
+          ...pet,
+          category: pet.category || pet.species || 'Питомец',
+          weightKg: pet.weightKg ?? 0,
+          heightCm: pet.heightCm ?? 0,
+          tempMin: pet.tempMin ?? 18,
+          tempMax: pet.tempMax ?? 22,
+          photoUrl: pet.photoUrl || INITIAL_PETS[0].photoUrl,
+        }));
+        setPets(normalizedPets);
+        setActivePet((current) => normalizedPets.find((pet) => pet.id === current?.id) || normalizedPets[0]);
+      })
+      .catch((error) => {
+        if (!cancelled) setPetsLoadError(error.message);
+      });
+
+    return () => { cancelled = true; };
+  }, []);
+
+  const handleAddNewPet = async (newPet) => {
+    const response = await fetch('/api/pets', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newPet),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Не удалось сохранить питомца.');
+
+    const savedPet = {
+      ...newPet,
+      id: result.id,
+      photoUrl: newPet.photoUrl || INITIAL_PETS[0].photoUrl,
+    };
+    setPets((current) => [...current.filter((pet) => !String(pet.id).startsWith('pet-')), savedPet]);
+    return savedPet;
+  };
 
   // Tariffs & selection
   const [tariffs] = useState(TARIFFS);
@@ -270,6 +323,7 @@ export default function App() {
         {/* Tab 3: Saved Pets */}
         {activeTab === 'pets' && (
           <main className="flex-1">
+            {petsLoadError && <p role="alert" className="mx-4 mt-3 text-sm text-red-700">{petsLoadError}</p>}
             <PetsTab
               pets={pets}
               activePet={activePet}
@@ -349,7 +403,7 @@ export default function App() {
           pets={pets}
           activePet={activePet}
           onSelectPet={setActivePet}
-          onAddNewPet={(newPet) => setPets((prev) => [...prev, newPet])}
+          onAddNewPet={handleAddNewPet}
         />
 
         <ScheduleModal

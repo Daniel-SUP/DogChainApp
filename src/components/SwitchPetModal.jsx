@@ -10,6 +10,8 @@ export function SwitchPetModal({
   onAddNewPet,
 }) {
   const [isAddingNew, setIsAddingNew] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
   const [newName, setNewName] = useState('');
   const [newBreed, setNewBreed] = useState('');
   const [newWeight, setNewWeight] = useState(15);
@@ -18,12 +20,11 @@ export function SwitchPetModal({
 
   if (!isOpen) return null;
 
-  const handleCreatePet = (e) => {
+  const handleCreatePet = async (e) => {
     e.preventDefault();
-    if (!newName.trim() || !newBreed.trim()) return;
+    if (!newName.trim() || !newBreed.trim() || isSaving) return;
 
     const created = {
-      id: `pet-${Date.now()}`,
       name: newName.trim(),
       category: newCategory,
       breed: newBreed.trim(),
@@ -39,10 +40,18 @@ export function SwitchPetModal({
       requiresCrate: false,
     };
 
-    onAddNewPet(created);
-    onSelectPet(created);
-    setIsAddingNew(false);
-    onClose();
+    setIsSaving(true);
+    setSaveError('');
+    try {
+      const savedPet = await onAddNewPet(created);
+      onSelectPet(savedPet);
+      setIsAddingNew(false);
+      onClose();
+    } catch (error) {
+      setSaveError(error.message || 'Не удалось сохранить питомца. Попробуйте ещё раз.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -119,6 +128,7 @@ export function SwitchPetModal({
           </div>
         ) : (
           <form onSubmit={handleCreatePet} className="space-y-4">
+            {saveError && <p role="alert" className="text-sm text-red-700">{saveError}</p>}
             <div>
               <label className="block text-xs font-semibold text-[#5c4e42] mb-1">
                 Кличка питомца
@@ -211,6 +221,7 @@ export function SwitchPetModal({
               </button>
               <button
                 type="submit"
+                disabled={isSaving}
                 className="flex-1 py-2.5 rounded-xl bg-[#c2652a] text-white font-semibold text-xs shadow-md"
               >
                 Сохранить
