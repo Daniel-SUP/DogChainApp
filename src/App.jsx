@@ -95,6 +95,38 @@ export default function App() {
     return savedPet;
   };
 
+  const handleUpdatePet = async (updatedPet) => {
+    const response = await fetch('/api/pets', {
+      method: 'PUT',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedPet),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Не удалось изменить питомца.');
+    const savedPet = { ...updatedPet };
+    setPets((current) => current.map((pet) => pet.id === savedPet.id ? savedPet : pet));
+    setActivePet((current) => current?.id === savedPet.id ? savedPet : current);
+    return savedPet;
+  };
+
+  const handleDeletePet = async (pet) => {
+    if (!window.confirm(`Удалить профиль питомца «${pet.name}»?`)) return;
+    try {
+      const response = await fetch(`/api/pets?id=${encodeURIComponent(pet.id)}`, {
+        method: 'DELETE',
+        credentials: 'same-origin',
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'Не удалось удалить питомца.');
+      const remainingPets = pets.filter((item) => item.id !== pet.id);
+      setPets(remainingPets);
+      setActivePet((current) => current?.id === pet.id ? (remainingPets[0] || null) : current);
+    } catch (error) {
+      setPetsLoadError(error.message || 'Не удалось удалить питомца.');
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await fetch('/api/auth/logout', { method: 'POST', credentials: 'same-origin' });
@@ -159,6 +191,7 @@ export default function App() {
 
   // Modals state
   const [isSwitchPetOpen, setIsSwitchPetOpen] = useState(false);
+  const [editingPet, setEditingPet] = useState(null);
   const [isAddressPickerOpen, setIsAddressPickerOpen] = useState(false);
   const [addressPickerType, setAddressPickerType] = useState('pickup');
   const [isScheduleOpen, setIsScheduleOpen] = useState(false);
@@ -355,7 +388,9 @@ export default function App() {
               pets={pets}
               activePet={activePet}
               onSelectPet={setActivePet}
-              onOpenAddNew={() => setIsSwitchPetOpen(true)}
+              onOpenAddNew={() => { setEditingPet(null); setIsSwitchPetOpen(true); }}
+              onEditPet={(pet) => { setEditingPet(pet); setIsSwitchPetOpen(true); }}
+              onDeletePet={handleDeletePet}
             />
           </main>
         )}
@@ -428,11 +463,13 @@ export default function App() {
         {/* Other Modals */}
         <SwitchPetModal
           isOpen={isSwitchPetOpen}
-          onClose={() => setIsSwitchPetOpen(false)}
+          onClose={() => { setIsSwitchPetOpen(false); setEditingPet(null); }}
           pets={pets}
           activePet={activePet}
           onSelectPet={setActivePet}
           onAddNewPet={handleAddNewPet}
+          onUpdatePet={handleUpdatePet}
+          initialPet={editingPet}
         />
 
         <ScheduleModal

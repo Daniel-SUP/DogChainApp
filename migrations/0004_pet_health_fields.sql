@@ -1,0 +1,3 @@
+ALTER TABLE pets ADD COLUMN vaccinated INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE pets ADD COLUMN vet_passport TEXT NOT NULL DEFAULT 'RB'
+  CHECK (vet_passport IN ('RB', 'RF', 'EU'));
