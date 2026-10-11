@@ -13,6 +13,8 @@ export function AddressPickerModal({
 }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isLocating, setIsLocating] = useState(false);
+  const [locationError, setLocationError] = useState('');
 
   if (!isOpen) return null;
 
@@ -51,6 +53,35 @@ export function AddressPickerModal({
       onSelectOnMap(type);
     }
     onClose();
+  };
+
+  const handleUseCurrentLocation = () => {
+    setLocationError('');
+    if (!navigator.geolocation) {
+      setLocationError('Этот браузер не поддерживает определение геопозиции.');
+      return;
+    }
+
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      async ({ coords }) => {
+        const point = [coords.latitude, coords.longitude];
+        const address = await reverseGeocode(coords.latitude, coords.longitude);
+        onSelectAddress(address, point);
+        setIsLocating(false);
+        onClose();
+      },
+      (error) => {
+        const message = error.code === error.PERMISSION_DENIED
+          ? 'Разрешите доступ к геопозиции в настройках браузера.'
+          : error.code === error.TIMEOUT
+            ? 'Не удалось определить местоположение вовремя. Попробуйте ещё раз.'
+            : 'Не удалось определить местоположение. Проверьте настройки геолокации устройства.';
+        setLocationError(message);
+        setIsLocating(false);
+      },
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 30000 }
+    );
   };
 
   return (
@@ -126,6 +157,17 @@ export function AddressPickerModal({
               : 'Указать место назначения на карте Бреста'}
           </span>
         </button>
+
+        <button
+          type="button"
+          onClick={handleUseCurrentLocation}
+          disabled={isLocating || isLoading}
+          className="w-full mb-3 py-2.5 px-3 bg-white hover:bg-[#fbf7f2] disabled:opacity-60 text-[#c2652a] rounded-xl font-bold text-xs flex items-center justify-center gap-2 border border-[#ded1bf] transition-all cursor-pointer shrink-0"
+        >
+          {isLocating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Navigation2 className="w-3.5 h-3.5" />}
+          <span>{isLocating ? 'Определяем местоположение…' : 'Моё местоположение'}</span>
+        </button>
+        {locationError && <p role="alert" className="mb-3 text-xs text-red-700">{locationError}</p>}
 
         {/* Locations List (Scrollable) */}
         <div className="flex-1 overflow-y-auto pr-0.5 space-y-2">
