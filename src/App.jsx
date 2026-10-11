@@ -14,7 +14,6 @@ import { BottomNav } from './components/BottomNav.jsx';
 import { ActivityTab } from './components/ActivityTab.jsx';
 import { PetsTab } from './components/PetsTab.jsx';
 import { AccountTab } from './components/AccountTab.jsx';
-import { SideDrawer } from './components/SideDrawer.jsx';
 
 import { INITIAL_PETS, TARIFFS } from './data/mockData.js';
 import { forwardGeocode } from './utils/geocoding.js';
@@ -24,7 +23,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('rides');
 
   // Region state (Only Brest available)
-  const [selectedRegion, setSelectedRegion] = useState('Брест, Центр');
+  const [selectedRegion, setSelectedRegion] = useState('г. Брест');
   const [isRegionModalOpen, setIsRegionModalOpen] = useState(false);
 
   // Pet state
@@ -91,7 +90,6 @@ export default function App() {
   const [isAddStopOpen, setIsAddStopOpen] = useState(false);
   const [isClimateInfoOpen, setIsClimateInfoOpen] = useState(false);
   const [isActiveRideOpen, setIsActiveRideOpen] = useState(false);
-  const [isSideDrawerOpen, setIsSideDrawerOpen] = useState(false);
 
   // Address picker trigger
   const handleOpenAddressPicker = (type) => {
@@ -213,10 +211,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#f4ede3] flex justify-center">
-      <div className="w-full max-w-md min-h-screen bg-[#faf5ee] shadow-2xl relative flex flex-col justify-between overflow-x-hidden">
+      <div className="w-full max-w-md min-h-screen bg-[#faf5ee] shadow-2xl relative flex flex-col justify-between">
         {/* Sahara Luxury Top Bar with Region Selector */}
         <Header
-          onOpenMenu={() => setIsSideDrawerOpen(true)}
           onOpenClimateInfo={() => setIsClimateInfoOpen(true)}
           onOpenPetProfile={() => setIsSwitchPetOpen(true)}
           onOpenRegionSelector={() => setIsRegionModalOpen(true)}
@@ -226,7 +223,7 @@ export default function App() {
 
         {/* Tab 1: Rides (Main screen) */}
         {activeTab === 'rides' && (
-          <main className="flex-1 pb-20">
+          <main className="flex-1 pb-28">
             {/* Interactive OpenStreetMap with Controlled Point Selection */}
             <MapInteractive
               pickupLocation={pickupAddress}
@@ -315,8 +312,8 @@ export default function App() {
         <RegionSelectorModal
           isOpen={isRegionModalOpen}
           onClose={() => setIsRegionModalOpen(false)}
-          selectedDistrict={selectedRegion}
-          onSelectDistrict={setSelectedRegion}
+          selectedRegion={selectedRegion}
+          onSelectRegion={setSelectedRegion}
         />
 
         {/* Intermediate Stop Modal (Add & Edit) */}
@@ -374,12 +371,6 @@ export default function App() {
           pet={activePet}
           tariff={selectedTariff}
           price={Math.max(10, selectedTariff.priceByn - 5)}
-        />
-
-        <SideDrawer
-          isOpen={isSideDrawerOpen}
-          onClose={() => setIsSideDrawerOpen(false)}
-          onSelectTab={setActiveTab}
         />
       </div>
     </div>

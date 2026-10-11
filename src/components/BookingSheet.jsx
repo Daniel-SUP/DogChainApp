@@ -58,7 +58,7 @@ export function BookingSheet({
   const finalPrice = Math.max(10, (selectedTariff?.priceByn || 26) - discountAmount);
 
   return (
-    <div className="bg-[#faf5ee] rounded-t-[32px] shadow-2xl border-t border-[#ded1bf] px-4 pt-3 pb-8 -mt-6 relative z-20 transition-all">
+    <div className="bg-[#faf5ee] rounded-t-[32px] shadow-2xl border-t border-[#ded1bf] px-4 pt-3 pb-8 -mt-6 relative z-30 transition-all">
       {/* Top Grab Handle */}
       <div className="w-12 h-1.5 bg-[#d8ccbc] rounded-full mx-auto mb-4" />
 

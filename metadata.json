@@ -2,5 +2,7 @@
   "name": "DogChain Брест — Сервис ЗооТакси",
   "description": "Премиальное зоотакси в Бресте, Беларусь. Сертифицированные водители, климат-контроль салона, защитные гамаки и вет-аптечка для безопасных поездок ваших питомцев.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

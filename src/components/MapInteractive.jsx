@@ -217,7 +217,7 @@ function MapControls({ pickupCoords, destinationCoords }) {
   const map = useMap();
 
   return (
-    <div className="absolute right-3 top-3 flex flex-col gap-2 z-[400]">
+    <div className="absolute right-3 top-3 flex flex-col gap-2 z-20">
       <button
         type="button"
         onClick={() => {
@@ -301,7 +301,7 @@ export function MapInteractive({
 
   return (
     <div
-      className={`relative w-full h-[370px] sm:h-[400px] overflow-hidden bg-[#faf5ee] select-none border-b border-[#ded1bf] ${
+      className={`relative z-0 isolate w-full h-[290px] sm:h-[330px] overflow-hidden bg-[#faf5ee] select-none border-b border-[#ded1bf] ${
         isPickingActive ? 'cursor-crosshair ring-2 ring-inset ring-[#c2652a]' : ''
       }`}
     >
@@ -345,7 +345,7 @@ export function MapInteractive({
       </MapContainer>
 
       {/* Оранжевая плашка времени подачи (связанная с OSRM) */}
-      <div className="absolute left-4 top-4 z-[400] pointer-events-none">
+      <div className="absolute left-4 top-4 z-20 pointer-events-none">
         <div className="flex items-center gap-1.5 bg-[#c2652a] text-white px-3.5 py-1.5 rounded-xl shadow-lg text-xs font-semibold whitespace-nowrap">
           <span className="text-sm">🐾</span>
           <span>Подача через {routeInfo.durationMin} мин</span>
@@ -353,9 +353,9 @@ export function MapInteractive({
         </div>
       </div>
 
-      {/* БАННЕР РЕЖИМА ВЫБОРА ТОЧКИ НА КАРТЕ: виден ТОЛЬКО когда пользователь выбрал изменить адрес на карте */}
+      {/* БАННЕР РЕЖИМА ВЫБОРА ТОЧКИ НА КАРТЕ */}
       {isPickingActive ? (
-        <div className="absolute left-1/2 -translate-x-1/2 top-4 z-[400] w-[92%] max-w-sm">
+        <div className="absolute left-1/2 -translate-x-1/2 top-4 z-20 w-[92%] max-w-sm">
           <div
             className={`flex items-center justify-between gap-2 px-3.5 py-2 rounded-2xl shadow-xl border backdrop-blur-md transition-all ${
               mapPickingTarget === 'pickup'
@@ -384,8 +384,8 @@ export function MapInteractive({
         </div>
       ) : null}
 
-      {/* Нижняя информационная плашка: статус водителей в Бресте */}
-      <div className="absolute left-4 bottom-7 z-[400] pointer-events-none">
+      {/* Нижняя информационная плашка */}
+      <div className="absolute left-4 bottom-7 z-20 pointer-events-none">
         <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-[#e2d5c4] shadow-md text-xs font-medium text-[#4a3e35]">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span>{availableDriversCount} сертифицированных водителя в Бресте</span>

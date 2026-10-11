@@ -17,6 +17,7 @@
     background-color: #faf5ee;
     color: #2b231d;
     -webkit-tap-highlight-color: transparent;
+    overflow-x: clip;
   }
 
   .font-serif {
@@ -33,6 +34,19 @@
 .leaflet-routing-alt {
   display: none !important;
 }
+
+/* Prevent Leaflet from overflowing header, bottom sheet, or modals */
+.leaflet-container {
+  z-index: 1 !important;
+}
+.leaflet-pane {
+  z-index: 2 !important;
+}
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 3 !important;
+}
+
 
 /* Sahara warm tint for map tiles */
 .carto-positron-warm {
