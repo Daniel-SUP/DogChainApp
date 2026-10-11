@@ -19,6 +19,14 @@ import { AuthScreen } from './components/AuthScreen.jsx';
 import { TARIFFS } from './data/mockData.js';
 import { forwardGeocode } from './utils/geocoding.js';
 
+const CASH_PAYMENT_METHOD = {
+  id: 'cash-driver',
+  type: 'cash',
+  title: 'Наличные водителю',
+  subtitle: 'Оплата белорусскими рублями (Br) при посадке',
+  isDefault: false,
+};
+
 export default function App() {
   // Navigation & Screen tab
   const [activeTab, setActiveTab] = useState('rides');
@@ -230,17 +238,31 @@ export default function App() {
   const [scheduledTime, setScheduledTime] = useState('');
 
   // Payment methods state (Cards & Cash)
-  const [paymentMethods, setPaymentMethods] = useState([
-    {
-      id: 'cash-driver',
-      type: 'cash',
-      title: 'Наличные водителю',
-      subtitle: 'Оплата белорусскими рублями (Br) при посадке',
-      isDefault: false,
-    },
-  ]);
+  const [paymentMethods, setPaymentMethods] = useState([CASH_PAYMENT_METHOD]);
   const [selectedPaymentId, setSelectedPaymentId] = useState('cash-driver');
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (!user) {
+      setPaymentMethods([CASH_PAYMENT_METHOD]);
+      setSelectedPaymentId('cash-driver');
+      return undefined;
+    }
+    let cancelled = false;
+    fetch('/api/payment-methods', { credentials: 'same-origin' })
+      .then(async (response) => {
+        if (!response.ok) throw new Error('Не удалось загрузить сохранённые карты.');
+        return response.json();
+      })
+      .then((cards) => {
+        if (cancelled || !Array.isArray(cards)) return;
+        setPaymentMethods([CASH_PAYMENT_METHOD, ...cards]);
+        const defaultCard = cards.find((card) => card.isDefault);
+        setSelectedPaymentId(defaultCard?.id || 'cash-driver');
+      })
+      .catch((error) => console.error(error));
+    return () => { cancelled = true; };
+  }, [user]);
 
   // Modals state
   const [isSwitchPetOpen, setIsSwitchPetOpen] = useState(false);
@@ -338,14 +360,46 @@ export default function App() {
   };
 
   // Payment handlers
-  const handleAddCard = (newCard) => {
-    setPaymentMethods((prev) => [newCard, ...prev]);
+  const handleAddCard = async (cardDetails) => {
+    const response = await fetch('/api/payment-methods', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cardDetails),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Не удалось сохранить карту.');
+    const savedCard = result.paymentMethod;
+    setPaymentMethods((current) => [savedCard, ...current.filter((method) => method.id !== savedCard.id)]);
+    setSelectedPaymentId(savedCard.id);
+    return savedCard;
   };
 
-  const handleDeleteCard = (cardId) => {
+  const handleDeleteCard = async (cardId) => {
+    const response = await fetch(`/api/payment-methods?id=${encodeURIComponent(cardId)}`, {
+      method: 'DELETE',
+      credentials: 'same-origin',
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Не удалось удалить карту.');
     setPaymentMethods((prev) => prev.filter((p) => p.id !== cardId));
     if (selectedPaymentId === cardId) {
       setSelectedPaymentId('cash-driver');
+    }
+  };
+
+  const handleSelectPayment = async (paymentId) => {
+    setSelectedPaymentId(paymentId);
+    setIsPaymentModalOpen(false);
+    try {
+      await fetch('/api/payment-methods', {
+        method: 'PUT',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: paymentId }),
+      });
+    } catch (error) {
+      console.error('Не удалось сохранить выбранный способ оплаты.', error);
     }
   };
 
@@ -458,10 +512,7 @@ export default function App() {
           onClose={() => setIsPaymentModalOpen(false)}
           paymentMethods={paymentMethods}
           selectedPaymentId={selectedPaymentId}
-          onSelectPayment={(id) => {
-            setSelectedPaymentId(id);
-            setIsPaymentModalOpen(false);
-          }}
+          onSelectPayment={handleSelectPayment}
           onAddCard={handleAddCard}
           onDeleteCard={handleDeleteCard}
         />

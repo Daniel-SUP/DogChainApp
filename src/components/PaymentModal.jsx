@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, CreditCard, Banknote, Plus, Check, Trash2, ShieldCheck } from 'lucide-react';
+import { X, CreditCard, Banknote, Plus, Check, Trash2 } from 'lucide-react';
 
 export function PaymentModal({
   isOpen,
@@ -11,21 +11,13 @@ export function PaymentModal({
   onDeleteCard,
 }) {
   const [isAddingNew, setIsAddingNew] = useState(false);
-  const [cardNumber, setCardNumber] = useState('');
-  const [cardHolder, setCardHolder] = useState('');
+  const [last4, setLast4] = useState('');
   const [expiry, setExpiry] = useState('');
-  const [cvv, setCvv] = useState('');
+  const [cardError, setCardError] = useState('');
+  const [isSavingCard, setIsSavingCard] = useState(false);
 
   if (!isOpen) return null;
 
-  // Format card number with spaces (e.g. 9112 0000 0000 9210)
-  const handleCardNumberChange = (e) => {
-    let val = e.target.value.replace(/\D/g, '').slice(0, 16);
-    val = val.replace(/(\d{4})(?=\d)/g, '$1 ');
-    setCardNumber(val);
-  };
-
-  // Format expiry (MM/YY)
   const handleExpiryChange = (e) => {
     let val = e.target.value.replace(/\D/g, '').slice(0, 4);
     if (val.length >= 3) {
@@ -34,30 +26,25 @@ export function PaymentModal({
     setExpiry(val);
   };
 
-  const handleAddNewCard = (e) => {
+  const handleAddNewCard = async (e) => {
     e.preventDefault();
-    if (cardNumber.replace(/\s/g, '').length < 16 || expiry.length < 5) {
-      alert('Пожалуйста, введите корректные данные карты (16 цифр и срок действия).');
+    if (!/^\d{4}$/.test(last4) || expiry.length < 5) {
+      setCardError('Укажите последние четыре цифры и срок действия карты.');
       return;
     }
-
-    const last4 = cardNumber.replace(/\s/g, '').slice(-4);
-    const newCard = {
-      id: `card-${Date.now()}`,
-      type: 'card',
-      title: `Белкарт •••• ${last4}`,
-      subtitle: `Действует до ${expiry}`,
-      last4: last4,
-      isDefault: false,
-    };
-
-    onAddCard(newCard);
-    onSelectPayment(newCard.id);
-    setIsAddingNew(false);
-    setCardNumber('');
-    setCardHolder('');
-    setExpiry('');
-    setCvv('');
+    setCardError('');
+    setIsSavingCard(true);
+    try {
+      const savedCard = await onAddCard({ last4, expiry });
+      onSelectPayment(savedCard.id);
+      setIsAddingNew(false);
+      setLast4('');
+      setExpiry('');
+    } catch (error) {
+      setCardError(error.message || 'Не удалось сохранить карту.');
+    } finally {
+      setIsSavingCard(false);
+    }
   };
 
   return (
@@ -113,12 +100,12 @@ export function PaymentModal({
                       </div>
 
                       <div className="flex items-center gap-2">
-                        {paymentMethods.filter((p) => p.type === 'card').length > 1 && (
+                        {paymentMethods.filter((p) => p.type === 'card').length > 0 && (
                           <button
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              onDeleteCard(m.id);
+                              onDeleteCard(m.id).catch((error) => alert(error.message || 'Не удалось удалить карту.'));
                             }}
                             className="p-1.5 text-[#9c8d7f] hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors"
                             title="Удалить карту"
@@ -137,6 +124,12 @@ export function PaymentModal({
                     </div>
                   );
                 })}
+
+              {paymentMethods.filter((method) => method.type === 'card').length === 0 && (
+                <p className="rounded-xl border border-dashed border-[#d8c8b5] p-3 text-xs text-[#7d6e61]">
+                  Банковские карты ещё не добавлены.
+                </p>
+              )}
 
               {paymentMethods.filter((method) => method.type === 'card').length === 0 && (
                 <p className="rounded-xl border border-dashed border-[#d8c8b5] p-3 text-xs text-[#7d6e61]">
@@ -207,15 +200,18 @@ export function PaymentModal({
           <form onSubmit={handleAddNewCard} className="space-y-3.5">
             <div>
               <label className="block text-xs font-semibold text-[#5c4e42] mb-1">
-                Номер карты (Белкарт / МИР / Visa / MasterCard)
+                Последние 4 цифры карты
               </label>
               <div className="relative">
                 <input
                   type="text"
                   required
-                  placeholder="0000 0000 0000 0000"
-                  value={cardNumber}
-                  onChange={handleCardNumberChange}
+                  inputMode="numeric"
+                  autoComplete="off"
+                  maxLength={4}
+                  placeholder="0000"
+                  value={last4}
+                  onChange={(event) => setLast4(event.target.value.replace(/\D/g, '').slice(0, 4))}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#ded1bf] text-sm font-mono tracking-wider focus:outline-none focus:ring-2 focus:ring-[#c2652a]"
                 />
                 <CreditCard className="w-4 h-4 absolute right-3.5 top-3 text-[#9c8d7f]" />
@@ -223,20 +219,6 @@ export function PaymentModal({
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[#5c4e42] mb-1">
-                Имя на карте (латиницей)
-              </label>
-              <input
-                type="text"
-                placeholder="IVAN IVANOV"
-                value={cardHolder}
-                onChange={(e) => setCardHolder(e.target.value.toUpperCase())}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#ded1bf] text-sm uppercase focus:outline-none focus:ring-2 focus:ring-[#c2652a]"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
                 <label className="block text-xs font-semibold text-[#5c4e42] mb-1">
                   Срок действия (ММ/ГГ)
                 </label>
@@ -248,28 +230,12 @@ export function PaymentModal({
                   onChange={handleExpiryChange}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#ded1bf] text-sm font-mono text-center focus:outline-none focus:ring-2 focus:ring-[#c2652a]"
                 />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-[#5c4e42] mb-1">
-                  CVC / CVV
-                </label>
-                <input
-                  type="password"
-                  required
-                  maxLength={4}
-                  placeholder="•••"
-                  value={cvv}
-                  onChange={(e) => setCvv(e.target.value.replace(/\D/g, ''))}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#ded1bf] text-sm font-mono text-center focus:outline-none focus:ring-2 focus:ring-[#c2652a]"
-                />
-              </div>
             </div>
 
-            <div className="p-2.5 bg-[#efe7db] rounded-xl text-[11px] text-[#6d5e51] flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Данные защищены протоколом 3-D Secure и ЕРИП/Банком РБ.</span>
+            <div className="p-2.5 bg-[#efe7db] rounded-xl text-[11px] text-[#6d5e51]">
+              Демо-режим: сохраняются только последние 4 цифры и срок действия. Реальные платежи не подключены.
             </div>
+            {cardError && <p role="alert" className="text-xs text-red-700">{cardError}</p>}
 
             <div className="flex gap-2 pt-2">
               <button
@@ -281,9 +247,10 @@ export function PaymentModal({
               </button>
               <button
                 type="submit"
-                className="flex-1 py-2.5 rounded-xl bg-[#c2652a] text-white font-semibold text-xs shadow-md"
+                disabled={isSavingCard}
+                className="flex-1 py-2.5 rounded-xl bg-[#c2652a] text-white font-semibold text-xs shadow-md disabled:opacity-60"
               >
-                Привязать карту
+                {isSavingCard ? 'Сохраняем…' : 'Сохранить карту'}
               </button>
             </div>
           </form>

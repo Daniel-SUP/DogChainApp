@@ -12,6 +12,12 @@ function validatePet(body) {
     return "Проверьте диапазон комфортной температуры.";
   }
   if (!PASSPORTS.has(body.vetPassport)) return "Выберите тип ветпаспорта.";
+  if (body.photoUrl != null && body.photoUrl !== "") {
+    if (typeof body.photoUrl !== "string" || body.photoUrl.length > 550_000) return "Фото слишком большое. Выберите изображение меньшего размера.";
+    const isImageData = /^data:image\/(jpeg|png|webp);base64,/.test(body.photoUrl);
+    const isHttpsUrl = /^https:\/\//i.test(body.photoUrl);
+    if (!isImageData && !isHttpsUrl) return "Можно сохранить только изображение или HTTPS-ссылку на фото.";
+  }
   return null;
 }
 
@@ -26,7 +32,7 @@ function petValues(body) {
     body.heightCm,
     body.tempMin,
     body.tempMax,
-    typeof body.photoUrl === "string" ? body.photoUrl : null,
+    typeof body.photoUrl === "string" ? body.photoUrl.trim() || null : null,
     typeof body.coatType === "string" ? body.coatType : null,
     typeof body.temperament === "string" ? body.temperament : null,
     body.requiresCrate ? 1 : 0,
