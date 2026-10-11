@@ -1,2 +1,8 @@
 name = "dogchainapp"
 pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "dogchainapp-db"
+# Replace this with the database_id from `npx wrangler d1 create dogchainapp-db`.
+database_id = "098dbc0e-6820-47a7-9822-e84b57cbc653"
