@@ -16,17 +16,17 @@ export function ScheduleModal({ isOpen, onClose, onSchedule }) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-[#faf5ee] w-full max-w-md rounded-t-[28px] sm:rounded-3xl p-5 border border-[#ded1bf] shadow-2xl">
-        <div className="flex items-center justify-between pb-3 border-b border-[#e5d9c9] mb-4">
+      <div className="bg-[#F4F5F7] w-full max-w-md rounded-t-[28px] sm:rounded-3xl p-5 border border-[#D5D9DF] shadow-2xl">
+        <div className="flex items-center justify-between pb-3 border-b border-[#DFE2E7] mb-4">
           <div className="flex items-center gap-2">
-            <Clock className="w-5 h-5 text-[#c2652a]" />
+            <Clock className="w-5 h-5 text-[#7A1F3D]" />
             <h2 className="font-serif text-xl font-bold text-[#2a221c]">
               Заказ на определенное время
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-[#eee4d6] flex items-center justify-center text-[#55473c] hover:bg-[#e2d5c3]"
+            className="w-8 h-8 rounded-full bg-[#E5E7EB] flex items-center justify-center text-[#4B5563] hover:bg-[#D9DDE3]"
           >
             <X className="w-4 h-4" />
           </button>
@@ -34,7 +34,7 @@ export function ScheduleModal({ isOpen, onClose, onSchedule }) {
 
         {/* Date Selector */}
         <div className="mb-4">
-          <label className="block text-xs font-semibold text-[#5c4e42] mb-2">
+          <label className="block text-xs font-semibold text-[#4B5563] mb-2">
             Дата поездки
           </label>
           <div className="grid grid-cols-3 gap-2">
@@ -44,8 +44,8 @@ export function ScheduleModal({ isOpen, onClose, onSchedule }) {
                 onClick={() => setSelectedDay(day)}
                 className={`py-2 px-3 rounded-xl text-xs font-medium border text-center transition-colors ${
                   selectedDay === day
-                    ? 'bg-[#c2652a] text-white border-[#c2652a]'
-                    : 'bg-white text-[#5c4e42] border-[#ded1bf]'
+                    ? 'bg-[#7A1F3D] text-white border-[#7A1F3D]'
+                    : 'bg-white text-[#4B5563] border-[#D5D9DF]'
                 }`}
               >
                 {day}
@@ -56,7 +56,7 @@ export function ScheduleModal({ isOpen, onClose, onSchedule }) {
 
         {/* Time Selector */}
         <div className="mb-6">
-          <label className="block text-xs font-semibold text-[#5c4e42] mb-2">
+          <label className="block text-xs font-semibold text-[#4B5563] mb-2">
             Время подачи в Бресте
           </label>
           <div className="grid grid-cols-3 gap-2">
@@ -66,8 +66,8 @@ export function ScheduleModal({ isOpen, onClose, onSchedule }) {
                 onClick={() => setSelectedTime(t)}
                 className={`py-2 px-3 rounded-xl text-xs font-semibold border text-center transition-colors ${
                   selectedTime === t
-                    ? 'bg-[#c2652a] text-white border-[#c2652a]'
-                    : 'bg-white text-[#5c4e42] border-[#ded1bf]'
+                    ? 'bg-[#7A1F3D] text-white border-[#7A1F3D]'
+                    : 'bg-white text-[#4B5563] border-[#D5D9DF]'
                 }`}
               >
                 {t}
@@ -82,13 +82,13 @@ export function ScheduleModal({ isOpen, onClose, onSchedule }) {
               onSchedule('');
               onClose();
             }}
-            className="flex-1 py-3 rounded-xl bg-[#eee4d6] text-[#5c4e42] font-semibold text-xs"
+            className="flex-1 py-3 rounded-xl bg-[#E5E7EB] text-[#4B5563] font-semibold text-xs"
           >
             Сбросить
           </button>
           <button
             onClick={handleConfirm}
-            className="flex-1 py-3 rounded-xl bg-[#c2652a] text-white font-semibold text-xs shadow-md"
+            className="flex-1 py-3 rounded-xl bg-[#7A1F3D] text-white font-semibold text-xs shadow-md"
           >
             Подтвердить
           </button>

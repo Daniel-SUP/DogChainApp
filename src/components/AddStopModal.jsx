@@ -34,13 +34,13 @@ export function AddStopModal({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-[#faf5ee] w-full max-w-md rounded-t-[28px] sm:rounded-3xl p-5 border border-[#ded1bf] shadow-2xl">
-        <div className="flex items-center justify-between pb-3 border-b border-[#e5d9c9] mb-4">
+      <div className="bg-[#F4F5F7] w-full max-w-md rounded-t-[28px] sm:rounded-3xl p-5 border border-[#D5D9DF] shadow-2xl">
+        <div className="flex items-center justify-between pb-3 border-b border-[#DFE2E7] mb-4">
           <div className="flex items-center gap-2">
             {isEditing ? (
-              <Edit3 className="w-5 h-5 text-[#c2652a]" />
+              <Edit3 className="w-5 h-5 text-[#7A1F3D]" />
             ) : (
-              <Plus className="w-5 h-5 text-[#c2652a]" />
+              <Plus className="w-5 h-5 text-[#7A1F3D]" />
             )}
             <h2 className="font-serif text-xl font-bold text-[#2a221c]">
               {isEditing ? 'Изменить остановку' : 'Добавить остановку в Бресте'}
@@ -48,7 +48,7 @@ export function AddStopModal({
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-[#eee4d6] flex items-center justify-center text-[#55473c] hover:bg-[#e2d5c3]"
+            className="w-8 h-8 rounded-full bg-[#E5E7EB] flex items-center justify-center text-[#4B5563] hover:bg-[#D9DDE3]"
           >
             <X className="w-4 h-4" />
           </button>
@@ -56,7 +56,7 @@ export function AddStopModal({
 
         <div className="space-y-4 mb-4">
           <div>
-            <label className="block text-xs font-semibold text-[#5c4e42] mb-1">
+            <label className="block text-xs font-semibold text-[#4B5563] mb-1">
               Адрес промежуточной точки в Бресте
             </label>
             <input
@@ -64,11 +64,11 @@ export function AddStopModal({
               placeholder="Введите улицу и номер дома..."
               value={stopAddress}
               onChange={(e) => setStopAddress(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#ded1bf] text-sm focus:outline-none focus:ring-2 focus:ring-[#c2652a]"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#D5D9DF] text-sm focus:outline-none focus:ring-2 focus:ring-[#7A1F3D]"
             />
           </div>
 
-          <div className="text-xs font-semibold text-[#7d6e61]">
+          <div className="text-xs font-semibold text-[#6B7280]">
             Популярные попутные зоо-места:
           </div>
           <div className="space-y-2">
@@ -77,9 +77,9 @@ export function AddStopModal({
                 key={idx}
                 type="button"
                 onClick={() => handleSave(stop)}
-                className="w-full text-left p-2.5 bg-white hover:bg-[#f6efe6] border border-[#e8ded2] rounded-xl text-xs text-[#2a221c] flex items-center gap-2 transition-colors"
+                className="w-full text-left p-2.5 bg-white hover:bg-[#F0F2F5] border border-[#E1E4E9] rounded-xl text-xs text-[#2a221c] flex items-center gap-2 transition-colors"
               >
-                <MapPin className="w-3.5 h-3.5 text-[#c2652a] shrink-0" />
+                <MapPin className="w-3.5 h-3.5 text-[#7A1F3D] shrink-0" />
                 <span className="truncate">{stop}</span>
               </button>
             ))}
@@ -90,14 +90,14 @@ export function AddStopModal({
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 py-3 bg-[#eee4d6] hover:bg-[#e4d8c7] text-[#5c4e42] text-xs font-semibold rounded-xl"
+            className="flex-1 py-3 bg-[#E5E7EB] hover:bg-[#DCE0E6] text-[#4B5563] text-xs font-semibold rounded-xl"
           >
             Отмена
           </button>
           <button
             onClick={() => handleSave(stopAddress)}
             disabled={!stopAddress.trim()}
-            className="flex-1 py-3 bg-[#c2652a] hover:bg-[#b05820] disabled:opacity-40 text-white text-xs font-bold rounded-xl shadow-md transition-colors"
+            className="flex-1 py-3 bg-[#7A1F3D] hover:bg-[#65182F] disabled:opacity-40 text-white text-xs font-bold rounded-xl shadow-md transition-colors"
           >
             {isEditing ? 'Сохранить изменения' : 'Добавить остановку'}
           </button>

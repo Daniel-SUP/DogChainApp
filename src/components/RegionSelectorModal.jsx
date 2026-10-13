@@ -70,23 +70,23 @@ export function RegionSelectorModal({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-[#faf5ee] w-full max-w-md rounded-t-[28px] sm:rounded-3xl p-5 border border-[#ded1bf] shadow-2xl max-h-[85vh] overflow-y-auto">
+      <div className="bg-[#F4F5F7] w-full max-w-md rounded-t-[28px] sm:rounded-3xl p-5 border border-[#D5D9DF] shadow-2xl max-h-[85vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-[#e5d9c9] mb-4">
+        <div className="flex items-center justify-between pb-3 border-b border-[#DFE2E7] mb-4">
           <div className="flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-[#c2652a]" />
+            <MapPin className="w-5 h-5 text-[#7A1F3D]" />
             <div>
               <h2 className="font-serif text-xl font-bold text-[#2a221c]">
                 Выбор города
               </h2>
-              <div className="text-[11px] text-[#7d6e61]">
+              <div className="text-[11px] text-[#6B7280]">
                 Республика Беларусь
               </div>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-[#eee4d6] flex items-center justify-center text-[#55473c] hover:bg-[#e2d5c3] cursor-pointer"
+            className="w-8 h-8 rounded-full bg-[#E5E7EB] flex items-center justify-center text-[#4B5563] hover:bg-[#D9DDE3] cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -116,18 +116,18 @@ export function RegionSelectorModal({
                 onClick={() => handleCityClick(city)}
                 className={`flex items-center justify-between p-3.5 rounded-2xl transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-white ring-2 ring-[#c2652a] shadow-sm'
+                    ? 'bg-white ring-2 ring-[#7A1F3D] shadow-sm'
                     : isAvailable
-                    ? 'bg-white/80 hover:bg-white border border-[#e8ded2]'
-                    : 'bg-[#ede6db]/70 border border-[#dfd6c7] opacity-65 hover:opacity-85'
+                    ? 'bg-white/80 hover:bg-white border border-[#E1E4E9]'
+                    : 'bg-[#ECEEF2]/70 border border-[#DCE0E6] opacity-65 hover:opacity-85'
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <div
                     className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
                       isAvailable
-                        ? 'bg-[#c2652a]/15 text-[#c2652a]'
-                        : 'bg-[#dfd5c5] text-[#8c7e70]'
+                        ? 'bg-[#7A1F3D]/15 text-[#7A1F3D]'
+                        : 'bg-[#DDE1E6] text-[#7B8491]'
                     }`}
                   >
                     {isAvailable ? (
@@ -145,7 +145,7 @@ export function RegionSelectorModal({
                         <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                       )}
                     </div>
-                    <div className="text-[11px] text-[#7d6e61]">
+                    <div className="text-[11px] text-[#6B7280]">
                       {city.description}
                     </div>
                   </div>
@@ -156,14 +156,14 @@ export function RegionSelectorModal({
                     className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                       isAvailable
                         ? 'bg-emerald-100 text-emerald-800'
-                        : 'bg-[#dfd5c5] text-[#7a6d60]'
+                        : 'bg-[#DDE1E6] text-[#6B7280]'
                     }`}
                   >
                     {city.badge}
                   </span>
 
                   {isSelected && (
-                    <div className="w-5 h-5 rounded-full bg-[#c2652a] text-white flex items-center justify-center">
+                    <div className="w-5 h-5 rounded-full bg-[#7A1F3D] text-white flex items-center justify-center">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
                   )}

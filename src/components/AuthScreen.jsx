@@ -42,17 +42,17 @@ export function AuthScreen({ onAuthenticated }) {
   }
 
   return (
-    <main className="min-h-screen bg-[#f4ede3] flex items-center justify-center p-4">
-      <section className="w-full max-w-md rounded-3xl bg-[#faf5ee] p-6 shadow-xl border border-[#ded1bf]">
+    <main className="min-h-screen bg-[#E9EBEF] flex items-center justify-center p-4">
+      <section className="w-full max-w-md rounded-3xl bg-[#F4F5F7] p-6 shadow-xl border border-[#D5D9DF]">
         <div className="mb-6 text-center">
-          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#c2652a] text-2xl text-white">🐾</div>
+          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#7A1F3D] text-2xl text-white">🐾</div>
           <h1 className="font-serif text-2xl font-bold text-[#2a221c]">DogChain</h1>
-          <p className="mt-1 text-sm text-[#7d6e61]">{registering ? 'Создайте аккаунт для своих питомцев' : 'Войдите в свой аккаунт'}</p>
+          <p className="mt-1 text-sm text-[#6B7280]">{registering ? 'Создайте аккаунт для своих питомцев' : 'Войдите в свой аккаунт'}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {registering && (
-            <label className="block text-sm font-medium text-[#5c4e42]">
+            <label className="block text-sm font-medium text-[#4B5563]">
               Имя
               <input
                 autoComplete="name"
@@ -61,12 +61,12 @@ export function AuthScreen({ onAuthenticated }) {
                 maxLength={80}
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-                className="mt-1 w-full rounded-xl border border-[#ded1bf] bg-white px-3.5 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2652a]"
+                className="mt-1 w-full rounded-xl border border-[#D5D9DF] bg-white px-3.5 py-3 text-sm outline-none focus:ring-2 focus:ring-[#7A1F3D]"
               />
             </label>
           )}
 
-          <label className="block text-sm font-medium text-[#5c4e42]">
+          <label className="block text-sm font-medium text-[#4B5563]">
             Электронная почта
             <input
               type="email"
@@ -75,11 +75,11 @@ export function AuthScreen({ onAuthenticated }) {
               maxLength={254}
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              className="mt-1 w-full rounded-xl border border-[#ded1bf] bg-white px-3.5 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2652a]"
+              className="mt-1 w-full rounded-xl border border-[#D5D9DF] bg-white px-3.5 py-3 text-sm outline-none focus:ring-2 focus:ring-[#7A1F3D]"
             />
           </label>
 
-          <label className="block text-sm font-medium text-[#5c4e42]">
+          <label className="block text-sm font-medium text-[#4B5563]">
             Пароль
             <input
               type="password"
@@ -89,13 +89,13 @@ export function AuthScreen({ onAuthenticated }) {
               maxLength={128}
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              className="mt-1 w-full rounded-xl border border-[#ded1bf] bg-white px-3.5 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2652a]"
+              className="mt-1 w-full rounded-xl border border-[#D5D9DF] bg-white px-3.5 py-3 text-sm outline-none focus:ring-2 focus:ring-[#7A1F3D]"
             />
-            {registering && <span className="mt-1 block text-xs text-[#7d6e61]">От 12 до 128 символов.</span>}
+            {registering && <span className="mt-1 block text-xs text-[#6B7280]">От 12 до 128 символов.</span>}
           </label>
 
           {registering && (
-            <label className="block text-sm font-medium text-[#5c4e42]">
+            <label className="block text-sm font-medium text-[#4B5563]">
               Повторите пароль
               <input
                 type="password"
@@ -104,7 +104,7 @@ export function AuthScreen({ onAuthenticated }) {
                 maxLength={128}
                 value={confirmation}
                 onChange={(event) => setConfirmation(event.target.value)}
-                className="mt-1 w-full rounded-xl border border-[#ded1bf] bg-white px-3.5 py-3 text-sm outline-none focus:ring-2 focus:ring-[#c2652a]"
+                className="mt-1 w-full rounded-xl border border-[#D5D9DF] bg-white px-3.5 py-3 text-sm outline-none focus:ring-2 focus:ring-[#7A1F3D]"
               />
             </label>
           )}
@@ -114,18 +114,18 @@ export function AuthScreen({ onAuthenticated }) {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-xl bg-[#c2652a] px-4 py-3 font-semibold text-white disabled:opacity-60"
+            className="w-full rounded-xl bg-[#7A1F3D] px-4 py-3 font-semibold text-white disabled:opacity-60"
           >
             {isSubmitting ? 'Подождите…' : registering ? 'Зарегистрироваться' : 'Войти'}
           </button>
         </form>
 
-        <p className="mt-5 text-center text-sm text-[#7d6e61]">
+        <p className="mt-5 text-center text-sm text-[#6B7280]">
           {registering ? 'Уже есть аккаунт?' : 'Ещё нет аккаунта?'}{' '}
           <button
             type="button"
             onClick={() => { setMode(registering ? 'login' : 'register'); setError(''); }}
-            className="font-semibold text-[#c2652a] hover:underline"
+            className="font-semibold text-[#7A1F3D] hover:underline"
           >
             {registering ? 'Войти' : 'Зарегистрироваться'}
           </button>

@@ -3,19 +3,19 @@
 
 @layer base {
   :root {
-    --primary: #c2652a;
-    --background: #faf5ee;
+    --primary: #7A1F3D;
+    --background: #F4F5F7;
     --surface: #ffffff;
-    --surface-warm: #f4ece2;
-    --border-warm: #e3d7c7;
-    --text-primary: #2b231d;
-    --text-muted: #796b5e;
+    --surface-warm: #EFF1F4;
+    --border-warm: #D9DDE3;
+    --text-primary: #24262B;
+    --text-muted: #6B7280;
   }
 
   body {
     font-family: 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background-color: #faf5ee;
-    color: #2b231d;
+    background-color: #F4F5F7;
+    color: #24262B;
     -webkit-tap-highlight-color: transparent;
     overflow-x: clip;
   }
@@ -48,9 +48,9 @@
 }
 
 
-/* Sahara warm tint for map tiles */
+/* Neutral map tile tint */
 .carto-positron-warm {
-  filter: sepia(18%) saturate(110%) brightness(98%);
+  filter: saturate(92%) brightness(99%);
 }
 
 /* Custom subtle scrollbar */
@@ -59,14 +59,14 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #faf5ee;
+  background: #F4F5F7;
 }
 ::-webkit-scrollbar-thumb {
-  background: #ded2c1;
+  background: #D5D9DF;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #c2652a;
+  background: #7A1F3D;
 }
 
 

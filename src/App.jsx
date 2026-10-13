@@ -412,13 +412,13 @@ export default function App() {
   };
 
   if (authLoading) {
-    return <main className="min-h-screen bg-[#f4ede3] flex items-center justify-center text-[#7d6e61]">Загрузка…</main>;
+    return <main className="min-h-screen bg-[#E9EBEF] flex items-center justify-center text-[#6B7280]">Загрузка…</main>;
   }
   if (!user) return <AuthScreen onAuthenticated={setUser} />;
 
   return (
-    <div className="min-h-screen bg-[#f4ede3] flex justify-center">
-      <div className="w-full max-w-md min-h-screen bg-[#faf5ee] shadow-2xl relative flex flex-col justify-between">
+    <div className="min-h-screen bg-[#E9EBEF] flex justify-center">
+      <div className="w-full max-w-md min-h-screen bg-[#F4F5F7] shadow-2xl relative flex flex-col justify-between">
         {/* Sahara Luxury Top Bar with Region Selector */}
         <Header
           onOpenClimateInfo={() => setIsClimateInfoOpen(true)}

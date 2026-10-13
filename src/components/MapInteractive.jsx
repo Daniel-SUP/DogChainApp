@@ -28,8 +28,8 @@ export const createFinishIcon = () =>
   L.divIcon({
     className: 'custom-finish-marker',
     html: `
-      <div style="background: #ffffff; border: 2.5px solid #c2652a; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(0,0,0,0.25);">
-        <span style="color: #c2652a; font-weight: 900; font-size: 15px; line-height: 1;">✚</span>
+      <div style="background: #ffffff; border: 2.5px solid #7A1F3D; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(0,0,0,0.25);">
+        <span style="color: #7A1F3D; font-weight: 900; font-size: 15px; line-height: 1;">✚</span>
       </div>
     `,
     iconSize: [30, 30],
@@ -41,7 +41,7 @@ export const createCarIcon = () =>
   L.divIcon({
     className: 'custom-car-marker',
     html: `
-      <div style="background: #c2652a; border: 2px solid #ffffff; border-radius: 10px; width: 32px; height: 26px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(194, 101, 42, 0.45);">
+      <div style="background: #7A1F3D; border: 2px solid #ffffff; border-radius: 10px; width: 32px; height: 26px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(122, 31, 61, 0.45);">
         <span style="font-size: 13px;">🚗</span>
       </div>
     `,
@@ -83,8 +83,8 @@ function DynamicRoutingMachine({
       }),
       lineOptions: {
         styles: [
-          { color: '#7a320d', weight: 7, opacity: 0.25 },
-          { color: '#c2652a', weight: 5, opacity: 0.95 },
+          { color: '#54162A', weight: 7, opacity: 0.25 },
+          { color: '#7A1F3D', weight: 5, opacity: 0.95 },
         ],
       },
       addWaypoints: false,
@@ -226,7 +226,7 @@ function MapControls({ pickupCoords, destinationCoords }) {
           }
         }}
         title="Сфокусировать маршрут"
-        className="w-9 h-9 rounded-full bg-white/95 text-[#5e5145] hover:text-[#c2652a] shadow-md border border-[#e8ded2] flex items-center justify-center transition-all active:scale-95 cursor-pointer"
+        className="w-9 h-9 rounded-full bg-white/95 text-[#4B5563] hover:text-[#7A1F3D] shadow-md border border-[#E1E4E9] flex items-center justify-center transition-all active:scale-95 cursor-pointer"
       >
         <Compass className="w-4 h-4" />
       </button>
@@ -238,7 +238,7 @@ function MapControls({ pickupCoords, destinationCoords }) {
           }
         }}
         title="К точке подачи"
-        className="w-9 h-9 rounded-full bg-white/95 text-[#5e5145] hover:text-[#c2652a] shadow-md border border-[#e8ded2] flex items-center justify-center transition-all active:scale-95 cursor-pointer"
+        className="w-9 h-9 rounded-full bg-white/95 text-[#4B5563] hover:text-[#7A1F3D] shadow-md border border-[#E1E4E9] flex items-center justify-center transition-all active:scale-95 cursor-pointer"
       >
         <Navigation className="w-4 h-4" />
       </button>
@@ -306,8 +306,8 @@ export function MapInteractive({
 
   return (
     <div
-      className={`relative z-0 isolate w-full h-[290px] sm:h-[330px] overflow-hidden bg-[#faf5ee] select-none border-b border-[#ded1bf] ${
-        isPickingActive ? 'cursor-crosshair ring-2 ring-inset ring-[#c2652a]' : ''
+      className={`relative z-0 isolate w-full h-[290px] sm:h-[330px] overflow-hidden bg-[#F4F5F7] select-none border-b border-[#D5D9DF] ${
+        isPickingActive ? 'cursor-crosshair ring-2 ring-inset ring-[#7A1F3D]' : ''
       }`}
     >
       {/* Карта Leaflet */}
@@ -350,7 +350,7 @@ export function MapInteractive({
 
       {/* Оранжевая плашка времени подачи (связанная с OSRM) */}
       <div className="absolute left-4 top-4 z-20 pointer-events-none">
-        <div className="flex items-center gap-1.5 bg-[#c2652a] text-white px-3.5 py-1.5 rounded-xl shadow-lg text-xs font-semibold whitespace-nowrap">
+        <div className="flex items-center gap-1.5 bg-[#7A1F3D] text-white px-3.5 py-1.5 rounded-xl shadow-lg text-xs font-semibold whitespace-nowrap">
           <span className="text-sm">🐾</span>
           {routeInfo.durationMin && routeInfo.distanceKm
             ? <><span>Подача через {routeInfo.durationMin} мин</span><span className="opacity-80 text-[10px] ml-0.5">({routeInfo.distanceKm} км)</span></>
@@ -365,7 +365,7 @@ export function MapInteractive({
             className={`flex items-center justify-between gap-2 px-3.5 py-2 rounded-2xl shadow-xl border backdrop-blur-md transition-all ${
               mapPickingTarget === 'pickup'
                 ? 'bg-emerald-950/90 text-white border-emerald-500'
-                : 'bg-[#401e0a]/90 text-white border-[#c2652a]'
+                : 'bg-[#35121F]/90 text-white border-[#7A1F3D]'
             }`}
           >
             <div className="flex items-center gap-2 min-w-0">
@@ -391,7 +391,7 @@ export function MapInteractive({
 
       {/* Нижняя информационная плашка */}
       <div className="absolute left-4 bottom-7 z-20 pointer-events-none">
-        <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-[#e2d5c4] shadow-md text-xs font-medium text-[#4a3e35]">
+        <div className="flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-[#D9DDE3] shadow-md text-xs font-medium text-[#4B5563]">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
           <span>{availableDriversCount} сертифицированных водителя в Бресте</span>
         </div>

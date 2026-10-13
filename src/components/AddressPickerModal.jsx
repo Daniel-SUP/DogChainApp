@@ -86,18 +86,18 @@ export function AddressPickerModal({
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-sm">
-      <div className="bg-[#faf5ee] w-full max-w-md rounded-t-[28px] sm:rounded-3xl p-5 border border-[#ded1bf] shadow-2xl max-h-[85vh] flex flex-col">
+      <div className="bg-[#F4F5F7] w-full max-w-md rounded-t-[28px] sm:rounded-3xl p-5 border border-[#D5D9DF] shadow-2xl max-h-[85vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-[#e5d9c9] mb-3 shrink-0">
+        <div className="flex items-center justify-between pb-3 border-b border-[#DFE2E7] mb-3 shrink-0">
           <div className="flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-[#c2652a]" />
+            <MapPin className="w-5 h-5 text-[#7A1F3D]" />
             <h2 className="font-serif text-xl font-bold text-[#2a221c]">
               {type === 'pickup' ? 'Точка подачи в Бресте' : 'Место назначения в Бресте'}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-[#eee4d6] flex items-center justify-center text-[#55473c] hover:bg-[#e2d5c3] cursor-pointer"
+            className="w-8 h-8 rounded-full bg-[#E5E7EB] flex items-center justify-center text-[#4B5563] hover:bg-[#D9DDE3] cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -107,20 +107,20 @@ export function AddressPickerModal({
         <form onSubmit={handleSearchSubmit} className="mb-3 shrink-0">
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9c8d7f]" />
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8B929E]" />
               <input
                 type="text"
                 autoFocus
                 placeholder="Улица, дом или клиника в Бресте..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-8 py-2.5 rounded-xl bg-white border border-[#ded1bf] text-sm text-[#2a221c] placeholder:text-[#9c8d7f] focus:outline-none focus:ring-2 focus:ring-[#c2652a]"
+                className="w-full pl-10 pr-8 py-2.5 rounded-xl bg-white border border-[#D5D9DF] text-sm text-[#2a221c] placeholder:text-[#8B929E] focus:outline-none focus:ring-2 focus:ring-[#7A1F3D]"
               />
               {searchTerm && (
                 <button
                   type="button"
                   onClick={() => setSearchTerm('')}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#9c8d7f] hover:text-[#2a221c] p-1"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8B929E] hover:text-[#2a221c] p-1"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -130,7 +130,7 @@ export function AddressPickerModal({
             <button
               type="submit"
               disabled={!searchTerm.trim() || isLoading}
-              className="px-4 py-2.5 bg-[#c2652a] hover:bg-[#b05820] disabled:opacity-40 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-sm transition-all shrink-0 cursor-pointer"
+              className="px-4 py-2.5 bg-[#7A1F3D] hover:bg-[#65182F] disabled:opacity-40 text-white text-xs font-bold rounded-xl flex items-center gap-1.5 shadow-sm transition-all shrink-0 cursor-pointer"
             >
               {isLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -148,9 +148,9 @@ export function AddressPickerModal({
         <button
           type="button"
           onClick={handleChooseOnMap}
-          className="w-full mb-3 py-2.5 px-3 bg-[#efe6d8] hover:bg-[#e4d8c7] text-[#4a3e35] rounded-xl font-bold text-xs flex items-center justify-center gap-2 border border-[#ded1bf] transition-all cursor-pointer shrink-0"
+          className="w-full mb-3 py-2.5 px-3 bg-[#E8EAEE] hover:bg-[#DCE0E6] text-[#4B5563] rounded-xl font-bold text-xs flex items-center justify-center gap-2 border border-[#D5D9DF] transition-all cursor-pointer shrink-0"
         >
-          <Navigation2 className="w-3.5 h-3.5 text-[#c2652a] fill-current" />
+          <Navigation2 className="w-3.5 h-3.5 text-[#7A1F3D] fill-current" />
           <span>
             {type === 'pickup'
               ? 'Указать точку подачи на карте Бреста'
@@ -162,7 +162,7 @@ export function AddressPickerModal({
           type="button"
           onClick={handleUseCurrentLocation}
           disabled={isLocating || isLoading}
-          className="w-full mb-3 py-2.5 px-3 bg-white hover:bg-[#fbf7f2] disabled:opacity-60 text-[#c2652a] rounded-xl font-bold text-xs flex items-center justify-center gap-2 border border-[#ded1bf] transition-all cursor-pointer shrink-0"
+          className="w-full mb-3 py-2.5 px-3 bg-white hover:bg-[#F8F9FA] disabled:opacity-60 text-[#7A1F3D] rounded-xl font-bold text-xs flex items-center justify-center gap-2 border border-[#D5D9DF] transition-all cursor-pointer shrink-0"
         >
           {isLocating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Navigation2 className="w-3.5 h-3.5" />}
           <span>{isLocating ? 'Определяем местоположение…' : 'Моё местоположение'}</span>
@@ -175,23 +175,23 @@ export function AddressPickerModal({
           {searchTerm.trim() && filteredLocations.length === 0 && (
             <div
               onClick={() => handleSearchSubmit()}
-              className="flex items-center gap-3 p-3 rounded-xl bg-white border border-[#c2652a] cursor-pointer hover:bg-[#fbf7f2] transition-colors"
+              className="flex items-center gap-3 p-3 rounded-xl bg-white border border-[#7A1F3D] cursor-pointer hover:bg-[#F8F9FA] transition-colors"
             >
-              <div className="w-8 h-8 rounded-lg bg-[#c2652a]/15 text-[#c2652a] flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-[#7A1F3D]/15 text-[#7A1F3D] flex items-center justify-center shrink-0">
                 <Search className="w-4 h-4" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="font-bold text-xs text-[#2a221c]">
                   Искать «{searchTerm}» в Бресте
                 </div>
-                <div className="text-[11px] text-[#7d6e61]">
+                <div className="text-[11px] text-[#6B7280]">
                   Нажмите, чтобы найти адрес через карту OpenStreetMap
                 </div>
               </div>
             </div>
           )}
 
-          <div className="text-[11px] font-bold uppercase tracking-wider text-[#9c8d7f] pt-1">
+          <div className="text-[11px] font-bold uppercase tracking-wider text-[#8B929E] pt-1">
             {searchTerm.trim() ? 'Результаты поиска' : 'Популярные адреса и ветклиники'}
           </div>
 
@@ -203,8 +203,8 @@ export function AddressPickerModal({
                 onClick={() => handleLocationClick(loc)}
                 className={`flex items-start gap-3 p-3 rounded-xl cursor-pointer transition-colors ${
                   isSelected
-                    ? 'bg-[#c2652a]/10 border border-[#c2652a]'
-                    : 'bg-white hover:bg-[#f6efe6] border border-[#e8ded2]'
+                    ? 'bg-[#7A1F3D]/10 border border-[#7A1F3D]'
+                    : 'bg-white hover:bg-[#F0F2F5] border border-[#E1E4E9]'
                 }`}
               >
                 <div
@@ -213,7 +213,7 @@ export function AddressPickerModal({
                       ? 'bg-red-50 text-red-600'
                       : loc.category === 'park'
                       ? 'bg-emerald-50 text-emerald-700'
-                      : 'bg-[#efe6d8] text-[#6e5f52]'
+                      : 'bg-[#E8EAEE] text-[#596170]'
                   }`}
                 >
                   {loc.category === 'vet' ? (
@@ -229,13 +229,13 @@ export function AddressPickerModal({
                   <div className="font-semibold text-xs text-[#2a221c] leading-tight">
                     {loc.name}
                   </div>
-                  <div className="text-[11px] text-[#7d6e61] truncate mt-0.5">
+                  <div className="text-[11px] text-[#6B7280] truncate mt-0.5">
                     {loc.address}
                   </div>
                 </div>
 
                 {isSelected && (
-                  <span className="text-[10px] bg-[#c2652a] text-white px-2 py-0.5 rounded-full font-bold shrink-0">
+                  <span className="text-[10px] bg-[#7A1F3D] text-white px-2 py-0.5 rounded-full font-bold shrink-0">
                     Выбрано
                   </span>
                 )}
